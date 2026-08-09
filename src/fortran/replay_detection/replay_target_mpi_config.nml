@@ -1,0 +1,60 @@
+&replay_target_mpi_config
+    iface = 'eth0'
+    output_file = 'replay_target_telemetry.csv'
+    baseline_input = 'baseline.csv'
+    threat_signature_input = 'threat_signature_pure.csv'
+
+    n_workers = 4
+
+    worker_hosts(1) = 'collision'
+    worker_hosts(2) = 'preimage'
+    worker_hosts(3) = 'birthday'
+    worker_hosts(4) = 'cipher'
+
+    worker_ips(1) = '10.0.40.10'
+    worker_ips(2) = '10.0.40.11'
+    worker_ips(3) = '10.0.40.12'
+    worker_ips(4) = '10.0.40.13'
+
+    injector_host = 'injector'
+    injector_ip = '10.0.40.16'
+
+    auto_window_from_threat = .true.
+    replay_padding_windows = 5
+    window_seconds = 30
+    warmup_windows = 1
+
+    dry_run = .false.
+    require_confirmation = .true.
+    overwrite_output = .true.
+
+    enable_tx_replay = .true.
+    enable_rx_replay = .true.
+
+    baseline_tx_scale = 1.0
+    baseline_rx_scale = 1.0
+
+    sensor_rate_cap_mbps(1) = 1000.0
+    sensor_rate_cap_mbps(2) = 1000.0
+    sensor_rate_cap_mbps(3) = 1000.0
+    sensor_rate_cap_mbps(4) = 1000.0
+    abort_on_rate_cap_violation = .true.
+
+    tx_port_base = 6001
+    rx_port_base = 7001
+
+    sender_log_prefix = '/tmp/tc_sender_rank'
+    sender_pid_prefix = '/tmp/tc_sender_rank'
+    listener_pid_prefix = '/tmp/tc_listener_rank'
+    listener_log_prefix = '/tmp/tc_listener_rank'
+
+    tc_command = 'sudo tc'
+    tc_default_rate = '1000mbit'
+    tc_burst = '64kbit'
+    tc_latency = '400ms'
+    tc_quantum = ''
+    tc_r2q = '100'
+
+    min_rate_kbit = 8.0
+    max_rate_kbit = 1000000.0
+/

@@ -1,0 +1,82 @@
+&threat_detection_config
+    ! ============================================================
+    ! Input / output
+    ! ============================================================
+
+    telemetry_input_file = 'fibonacci_lag_exfiltration.csv'
+    baseline_input_file = 'baseline.csv'
+
+    output_file = 'threat_detection.csv'
+    global_output_file = 'threat_detection_global.csv'
+    correlation_output_file = 'threat_detection_correlation.csv'
+    correlation_matrix_output_file = 'threat_detection_correlation_matrix.csv'
+
+
+    ! ============================================================
+    ! Residual correlation / many-body analysis
+    ! ============================================================
+    !
+    ! Replay dimensions, replay window size, and baseline alignment are
+    ! read from the embedded metadata in telemetry_input_file.
+    !
+    ! correlation_window_source:
+    !   target_threat    -> use target_tx-baseline_tx or target_rx-baseline_rx
+    !                       to define the local support window for each sensor
+    !   local_detection  -> use P_i(t) >= low_likelihood_threshold
+    !   full_experiment  -> no local masking
+
+    enable_correlation_analysis = .true.
+    correlation_direction = 'tx'
+    correlation_window_source = 'target_threat'
+    correlation_max_lag_windows = 30
+
+
+    ! ============================================================
+    ! Many-body coordination alarm
+    ! ============================================================
+
+    alarm_correlation_threshold = 0.70
+    alarm_min_strong_edges = 3
+    alarm_lag_tolerance_windows = 1
+    alarm_min_consistency_fraction = 0.50
+
+
+    ! ============================================================
+    ! Anomaly component weights
+    ! ============================================================
+    !
+    ! Must sum to 1.
+
+    w_time = 0.25
+    w_magnitude = 0.35
+    w_persistence = 0.25
+    w_direction = 0.15
+
+
+    ! ============================================================
+    ! Component sensitivity constants
+    ! ============================================================
+
+    k_time = 2.0
+    k_tx = 2.0
+    k_rx = 2.0
+    k_persistence = 2.0
+    k_direction = 2.0
+
+
+    ! ============================================================
+    ! Persistence settings
+    ! ============================================================
+
+    persistence_trigger_threshold = 0.05
+    persistence_threshold_seconds = 120.0
+
+
+    ! ============================================================
+    ! Likelihood tier thresholds
+    ! ============================================================
+
+    low_likelihood_threshold = 0.25
+    moderate_likelihood_threshold = 0.50
+    high_likelihood_threshold = 0.75
+/

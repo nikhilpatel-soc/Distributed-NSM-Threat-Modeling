@@ -1,0 +1,119 @@
+&baseline_config
+    ! ============================================================
+    ! Output / resolution
+    ! ============================================================
+
+    output_file = 'baseline.csv'
+
+    n_sensors = 4
+    n_classes = 9
+
+    ! 24 hours at 30-second telemetry windows.
+    n_windows = 2880
+    window_seconds = 30
+
+    ! Reproducible random seed.
+    seed_base = 13579
+
+
+    ! ============================================================
+    ! Baseline class schedule
+    ! ============================================================
+    !
+    ! Class 1: Overnight Quiet        00:00--07:30
+    ! Class 2: Morning Startup        07:30--09:00
+    ! Class 3: Morning Work           09:00--11:45
+    ! Class 4: Lunch / Reduced Work   11:45--13:15
+    ! Class 5: Afternoon Work         13:15--17:00
+    ! Class 6: Wrap-Up                17:00--19:00
+    ! Class 7: Dinner / Low Activity  19:00--20:00
+    ! Class 8: Evening R&D Return     20:00--22:00
+    ! Class 9: Late Residual          22:00--24:00
+
+    class_start_minute = 0, 450, 540, 705, 795, 1020, 1140, 1200, 1320
+
+
+    ! ============================================================
+    ! Stochastic transform constants
+    ! ============================================================
+    !
+    ! D(t) = B(t) d P(t)
+    drift_coeff = 0.15
+
+    ! J(t) = Y_smooth(t) k Z(t)
+    ! Jitter is applied after Gaussian smoothing.
+    jitter_coeff = 0.075
+
+    ! Gaussian smoothing width, in samples/windows.
+    smooth_sigma_windows = 15.0
+
+    ! Human burst process.
+    human_lambda_per_day = 20.0
+    human_duration_min_seconds = 2.0
+    human_duration_max_seconds = 10.0
+    human_mu_log = 12.20607264553
+    human_sigma_log = 0.4
+
+
+    ! ============================================================
+    ! Logic-table baseline B(t), bytes/window
+    ! ============================================================
+    !
+    ! IMPORTANT:
+    !   Values below are bytes per 30-second telemetry window.
+    !   They were chosen from Mbps-scale targets using:
+    !
+    !       bytes/window = Mbps * 1,000,000 * 30 / 8
+    !
+    ! Sensor intent:
+    !   Sensor 1: ordinary/balanced R&D workstation
+    !   Sensor 2: RX-heavy data/retrieval workstation
+    !   Sensor 3: TX-heavy compute/research workstation
+    !   Sensor 4: lower-volume/light workstation
+    !
+    ! Array order is sensor-fastest by class:
+    ! class 1 sensors 1--4,
+    ! class 2 sensors 1--4,
+    ! ...
+    ! class 9 sensors 1--4.
+
+    tx_class_bytes =
+        ! Class 1: Overnight Quiet
+        7500000.0, 11250000.0, 7500000.0, 5625000.0,
+        ! Class 2: Morning Startup / Retrieval
+        93750000.0, 131250000.0, 131250000.0, 56250000.0,
+        ! Class 3: Morning Work
+        300000000.0, 225000000.0, 675000000.0, 168750000.0,
+        ! Class 4: Lunch / Reduced Work
+        93750000.0, 75000000.0, 168750000.0, 56250000.0,
+        ! Class 5: Afternoon Work
+        450000000.0, 300000000.0, 1125000000.0, 225000000.0,
+        ! Class 6: Wrap-Up
+        300000000.0, 206250000.0, 825000000.0, 131250000.0,
+        ! Class 7: Dinner / Low Activity
+        56250000.0, 45000000.0, 93750000.0, 30000000.0,
+        ! Class 8: Evening R&D Return
+        206250000.0, 75000000.0, 900000000.0, 37500000.0,
+        ! Class 9: Late Residual
+        30000000.0, 30000000.0, 75000000.0, 18750000.0
+
+    rx_class_bytes =
+        ! Class 1: Overnight Quiet
+        11250000.0, 30000000.0, 11250000.0, 7500000.0,
+        ! Class 2: Morning Startup / Retrieval
+        300000000.0, 525000000.0, 337500000.0, 168750000.0,
+        ! Class 3: Morning Work
+        375000000.0, 825000000.0, 375000000.0, 243750000.0,
+        ! Class 4: Lunch / Reduced Work
+        131250000.0, 225000000.0, 112500000.0, 75000000.0,
+        ! Class 5: Afternoon Work
+        412500000.0, 750000000.0, 412500000.0, 281250000.0,
+        ! Class 6: Wrap-Up
+        187500000.0, 337500000.0, 225000000.0, 131250000.0,
+        ! Class 7: Dinner / Low Activity
+        67500000.0, 75000000.0, 56250000.0, 37500000.0,
+        ! Class 8: Evening R&D Return
+        225000000.0, 131250000.0, 337500000.0, 45000000.0,
+        ! Class 9: Late Residual
+        37500000.0, 45000000.0, 30000000.0, 22500000.0
+/

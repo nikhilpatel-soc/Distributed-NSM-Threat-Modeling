@@ -1,0 +1,39 @@
+&threat_signature_config
+    baseline_file = 'baseline.csv'
+    output_file = 'threat_signature.csv'
+
+    n_sensors = 4
+    n_windows = 2880
+    window_seconds = 30
+    seed_base = 24680
+
+    n_threat_signatures = 4
+
+    scenario_id = 'compressed_10min_all_sensors_001'
+    scenario_label = 'compressed_10min_all_sensors_tx_exfiltration'
+/
+
+! ============================================================
+! Threat-event definitions
+! ============================================================
+!
+! Each column below defines one independent threat event.
+!
+! Window-to-time mapping:
+!   time_seconds = (window - 1) * window_seconds
+!
+! Therefore:
+!   window 1201 -> 10.0 h
+!   window 1441 -> 12.0 h
+!
+Threat:          1     2     3     4
+Sensor:          1     2     3     4
+Start window:    1801  1805  1809  1813
+End window:      1809  1813  1817  1821
+Ramp windows:    2     2     2     2
+TX Mbps:         15.0  15.0  15.0  15.0
+RX Mbps:         0.0   0.0   0.0   0.0
+Jitter fraction: 0.0   0.0   0.0   0.0
+
+! Multiple threats may be assigned to the same sensor.
+! Overlapping threats on the same sensor are summed.
